@@ -68,7 +68,7 @@
                 <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
                 <div class="mt-1 relative">
                     <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:outline-none transition duration-200">
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purplae-500 focus:outline-none transition duration-200">
                     <i class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer" onclick="togglePasswordVisibility()"></i>
                 </div>
             </div>

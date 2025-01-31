@@ -47,7 +47,7 @@ class AuthController extends Controller
         // Iniciar sesión automáticamente después del registro
         Auth::login($user);
 
-        return redirect()->route('dashboard');
+        return redirect()->route('inicio');
     }
 
     /**
@@ -74,7 +74,7 @@ class AuthController extends Controller
         // Iniciar sesión con el usuario autenticado
         Auth::login($user);
 
-        return redirect()->route('dashboard');
+        return redirect()->route('inicio');
     }
 
     /**
