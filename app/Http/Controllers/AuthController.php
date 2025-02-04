@@ -32,22 +32,22 @@ class AuthController extends Controller
     {
         // Validar los datos del formulario
         $request->validate([
-            'name' => 'required|string|max:255|unique:users', // Nombre de usuario debe ser único
+            'name' => 'required|string|max:255|unique:users', // Nombre único
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6|confirmed'
         ]);
 
-        // Crear el usuario en la base de datos
+        // Crear el usuario con contraseña encriptada
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password) // Encripta la contraseña
+            'password' => Hash::make($request->password) // Hashear la contraseña
         ]);
 
         // Iniciar sesión automáticamente después del registro
         Auth::login($user);
 
-        return redirect()->route('inicio');
+        return redirect()->route('inicio')->with('success', 'Registro exitoso');
     }
 
     /**
@@ -61,28 +61,28 @@ class AuthController extends Controller
             'password' => 'required|string|min:6',
         ]);
 
-        // Buscar al usuario por email o por nombre de usuario
-        $user = User::where('email', $request->login)
-                    ->orWhere('name', $request->login)
-                    ->first();
+        // Definir si el usuario ingresó un email o un nombre de usuario
+        $loginField = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
 
-        // Verificar si el usuario existe y la contraseña es correcta
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return back()->withErrors(['login' => 'Credenciales incorrectas.']);
+        // Intentar autenticar con Auth::attempt()
+        if (Auth::attempt([$loginField => $request->login, 'password' => $request->password])) {
+            $request->session()->regenerate();
+            return redirect()->route('inicio')->with('success', 'Inicio de sesión exitoso');
         }
 
-        // Iniciar sesión con el usuario autenticado
-        Auth::login($user);
-
-        return redirect()->route('inicio');
+        // Si la autenticación falla, retornar error
+        return back()->withErrors(['login' => 'Credenciales incorrectas.'])->withInput();
     }
 
     /**
      * Cierra la sesión del usuario
      */
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
-        return redirect()->route('login');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login')->with('success', 'Sesión cerrada correctamente');
     }
 }
