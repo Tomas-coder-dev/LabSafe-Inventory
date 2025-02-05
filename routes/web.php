@@ -25,13 +25,13 @@ Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('regi
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Rutas protegidas por autenticación
 Route::middleware(['auth'])->group(function () {
     // Página de inicio
     Route::get('/inicio', function () {
-        return view('pages.inicio');
+        return view('layouts.app'); // Redirigir a app.blade.php
     })->name('inicio');
 
     // Rutas de CRUD para cada módulo del sistema
