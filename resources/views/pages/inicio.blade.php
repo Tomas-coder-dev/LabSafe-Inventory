@@ -9,7 +9,6 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <style>
-    /* Fondo personalizado */
     body {
       background-image: url('{{ asset('assets/images/background2.jpg') }}');
       background-size: cover;
@@ -17,9 +16,8 @@
       background-repeat: no-repeat;
       background-attachment: fixed;
     }
-    /* Sidebar */
     .sidebar {
-      background: rgba(50, 50, 50, 0.85); /* Fondo más claro */
+      background: rgba(50, 50, 50, 0.85);
       transition: transform 0.3s ease-in-out;
       width: 16rem;
       position: fixed;
@@ -27,11 +25,11 @@
       z-index: 50;
       display: flex;
       flex-direction: column;
+      overflow-y: auto;
     }
     .hidden-menu {
       transform: translateX(-100%);
     }
-    /* Texto con gradiente */
     .gradient-text {
       background: linear-gradient(to right, #f43f5e, #3b82f6);
       -webkit-background-clip: text;
@@ -39,7 +37,6 @@
       font-size: 1.75rem;
       font-weight: bold;
     }
-    /* Botón estilizado */
     .btn-primary {
       background: linear-gradient(to right, #f43f5e, #3b82f6);
       color: white;
@@ -53,7 +50,6 @@
       transform: scale(1.1);
       box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
     }
-    /* Botón de ocultar menú fijo en la parte inferior */
     .btn-hide {
       background: linear-gradient(to right, #3b82f6, #f43f5e);
       color: white;
@@ -72,17 +68,16 @@
     .btn-hide:hover {
       transform: translateX(-50%) scale(1.05);
     }
-    /* Contenido principal ajustable */
     .content {
       transition: margin-left 0.3s ease, padding 0.3s ease;
       margin-left: 16rem;
       width: calc(100% - 16rem);
+      overflow-y: auto;
     }
     .content.expanded {
       margin-left: 0;
       width: 100%;
     }
-    /* Ajustes de opciones del menú */
     .menu-section {
       padding-top: 1rem;
       display: flex;
@@ -112,11 +107,17 @@
     </div>
     <nav class="menu-section px-4">
       <ul>
-        <!-- 1. Sustancias Químicas -->
+        <!-- 1. Inicio -->
+        <li>
+          <a href="{{ route('inicio') }}" class="flex items-center p-3 rounded-lg hover:bg-gray-700">
+            <i class="fas fa-home mr-3"></i> Inicio
+          </a>
+        </li>
+        <!-- 2. Sustancias Químicas -->
         <li class="relative">
           <button class="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-700" onclick="toggleDropdown('dropdown1')">
             <span class="flex items-center">
-              <i class="fas fa-flask mr-3"></i> Sustancias Químicas 🧪
+              <i class="fas fa-flask mr-3"></i> Sustancias Químicas
             </span>
             <i class="fas fa-chevron-down"></i>
           </button>
@@ -133,11 +134,11 @@
             </li>
           </ul>
         </li>
-        <!-- 2. Inventario -->
+        <!-- 3. Inventario -->
         <li class="relative">
           <button class="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-700" onclick="toggleDropdown('dropdown2')">
             <span class="flex items-center">
-              <i class="fas fa-box mr-3"></i> Inventario 📦
+              <i class="fas fa-box mr-3"></i> Inventario
             </span>
             <i class="fas fa-chevron-down"></i>
           </button>
@@ -152,13 +153,18 @@
                 Eliminar Stock
               </a>
             </li>
+            <li>
+              <a href="{{ route('inventario.historial') }}" class="block p-3 rounded-lg hover:bg-gray-700">
+                Historial de Inventario
+              </a>
+            </li>
           </ul>
         </li>
-        <!-- 3. Lotes -->
+        <!-- 4. Lotes -->
         <li class="relative">
           <button class="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-700" onclick="toggleDropdown('dropdown3')">
             <span class="flex items-center">
-              <i class="fas fa-clipboard-list mr-3"></i> Lotes 📑
+              <i class="fas fa-clipboard-list mr-3"></i> Lotes
             </span>
             <i class="fas fa-chevron-down"></i>
           </button>
@@ -175,11 +181,11 @@
             </li>
           </ul>
         </li>
-        <!-- 4. Notificaciones -->
+        <!-- 5. Notificaciones -->
         <li class="relative">
           <button class="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-700" onclick="toggleDropdown('dropdown4')">
             <span class="flex items-center">
-              <i class="fas fa-bell mr-3"></i> Notificaciones 🔔
+              <i class="fas fa-bell mr-3"></i> Notificaciones
             </span>
             <i class="fas fa-chevron-down"></i>
           </button>
@@ -196,11 +202,11 @@
             </li>
           </ul>
         </li>
-        <!-- 5. Reportes -->
+        <!-- 6. Reportes -->
         <li class="relative">
           <button class="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-700" onclick="toggleDropdown('dropdown5')">
             <span class="flex items-center">
-              <i class="fas fa-chart-bar mr-3"></i> Reportes 📊
+              <i class="fas fa-chart-bar mr-3"></i> Reportes
             </span>
             <i class="fas fa-chevron-down"></i>
           </button>
@@ -222,12 +228,11 @@
             </li>
           </ul>
         </li>
-        <!-- 6. Gestión de Usuarios (Solo para Administradores) -->
+        <!-- 7. Gestión de Usuarios -->
         <li class="relative">
           <button class="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-700" onclick="toggleDropdown('dropdown6')">
             <span class="flex items-center">
-              <i class="fas fa-user-cog mr-3"></i> Gestión de Usuarios 👥
-              <span class="text-sm italic">(Solo para Administradores)</span>
+              <i class="fas fa-user-cog mr-3"></i> Gestión de Usuarios
             </span>
             <i class="fas fa-chevron-down"></i>
           </button>
