@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Control</title>
+  <title>@yield('title', 'Panel de Control')</title>
   <!-- Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <!-- Font Awesome -->
@@ -264,10 +264,10 @@
         <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
       </a>
     </header>
-    <section class="bg-white bg-opacity-80 p-6 rounded-lg shadow-lg">
-      <h3 class="text-xl font-semibold mb-4">Panel de Control</h3>
-      <p>Selecciona una opción del menú para empezar.</p>
-    </section>
+    
+    <!-- Área para inyectar el contenido específico de cada vista -->
+    @yield('content')
+    
   </main>
 
   <script>
