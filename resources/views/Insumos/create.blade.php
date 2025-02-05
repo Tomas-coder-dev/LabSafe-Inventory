@@ -1,48 +1,53 @@
 @extends('layouts.app')
 
+@section('title', 'Registrar Sustancia')
+
 @section('content')
 <div class="container mx-auto p-6 bg-white shadow-lg rounded-lg">
-    <h2 class="text-2xl font-bold mb-4">Registrar Insumo</h2>
+    <h2 class="text-2xl font-bold mb-4">Registrar Nueva Sustancia</h2>
 
-    <form action="{{ route('insumos.store') }}" method="POST">
+    <form id="formInsumo" class="space-y-4">
         @csrf
-
-        <div class="mb-4">
-            <label for="codigo_insumo" class="block text-sm font-medium text-gray-700">Código</label>
-            <input type="text" name="codigo_insumo" id="codigo_insumo" class="w-full p-3 border rounded-lg" required>
+        <div>
+            <label class="block text-sm font-medium">Código de Insumo</label>
+            <input type="text" id="codigo_insumo" name="codigo_insumo" class="w-full p-2 border rounded-lg" required>
         </div>
 
-        <div class="mb-4">
-            <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre</label>
-            <input type="text" name="nombre" id="nombre" class="w-full p-3 border rounded-lg" required>
+        <div>
+            <label class="block text-sm font-medium">Nombre</label>
+            <input type="text" id="nombre" name="nombre" class="w-full p-2 border rounded-lg" required>
         </div>
 
-        <div class="mb-4">
-            <label for="id_familia" class="block text-sm font-medium text-gray-700">Familia</label>
-            <select name="id_familia" id="id_familia" class="w-full p-3 border rounded-lg" required>
-                <option value="">Seleccione una familia</option>
-                @foreach($familias as $familia)
-                    <option value="{{ $familia->id }}">{{ $familia->nombre }}</option>
-                @endforeach
-            </select>
+        <div>
+            <label class="block text-sm font-medium">Cantidad Total</label>
+            <input type="number" id="cantidad_total" name="cantidad_total" class="w-full p-2 border rounded-lg" required>
         </div>
 
-        <div class="mb-4">
-            <label for="id_categoria" class="block text-sm font-medium text-gray-700">Categoría</label>
-            <select name="id_categoria" id="id_categoria" class="w-full p-3 border rounded-lg" required>
-                <option value="">Seleccione una categoría</option>
-                @foreach($categorias as $categoria)
-                    <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="mb-4">
-            <label for="cantidad_total" class="block text-sm font-medium text-gray-700">Cantidad Total</label>
-            <input type="number" name="cantidad_total" id="cantidad_total" class="w-full p-3 border rounded-lg" required>
-        </div>
-
-        <button type="submit" class="btn-primary">Registrar Insumo</button>
+        <button type="submit" class="btn-primary w-full">Registrar Sustancia</button>
     </form>
+
+    <p id="message" class="text-green-500 mt-4 hidden">Sustancia registrada correctamente</p>
 </div>
+
+<script>
+    document.getElementById('formInsumo').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        let formData = new FormData(this);
+
+        fetch("{{ route('insumos.store') }}", {
+            method: "POST",
+            body: formData,
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('input[name=_token]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('message').classList.remove('hidden');
+            this.reset();
+        })
+        .catch(error => console.error('Error:', error));
+    });
+</script>
 @endsection
