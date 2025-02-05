@@ -2,63 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Insumo;
+use App\Models\MovimientoInventario;
 use Illuminate\Http\Request;
 
 class MovimientoInventarioController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function entrada()
     {
-        //
+        $insumos = Insumo::all();
+        return view('pages.inventario.entrada', compact('insumos'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function salida()
     {
-        //
+        $insumos = Insumo::all();
+        return view('pages.inventario.salida', compact('insumos'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'id_insumo' => 'required|exists:insumos,id',
+            'cantidad' => 'required|numeric|min:1',
+            'tipo_movimiento' => 'required|in:entrada,salida',
+            'motivo' => 'nullable|string',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $insumo = Insumo::findOrFail($request->id_insumo);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        if ($request->tipo_movimiento === 'salida' && $insumo->cantidad_total < $request->cantidad) {
+            return redirect()->back()->with('error', 'No hay suficiente stock para realizar la salida.');
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        // Crear el movimiento
+        MovimientoInventario::create([
+            'id_insumo' => $request->id_insumo,
+            'id_usuario' => auth()->id(),
+            'tipo_movimiento' => $request->tipo_movimiento,
+            'cantidad' => $request->cantidad,
+            'fecha' => now(),
+            'motivo' => $request->motivo,
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        // Actualizar el stock
+        $insumo->cantidad_total += $request->tipo_movimiento === 'entrada' ? $request->cantidad : -$request->cantidad;
+        $insumo->save();
+
+        return redirect()->route('inventario.historial')->with('success', 'Movimiento registrado con éxito.');
     }
 }
+
